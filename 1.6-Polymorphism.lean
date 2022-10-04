@@ -8,3 +8,13 @@ def List.llast? {α : Type} (xs : List α) : Option α :=
   | y :: aa => if length aa == 0 then Option.some y else aa.llast?
 
 #eval ['a', 'b', 'c'].llast?
+
+
+-- Alternative
+
+def llast? {α : Type} (xs : List α) : Option α :=
+  match xs with
+  | [] => Option.none
+  | y :: aa => if aa.length == 0 then Option.some y else llast? aa
+
+#eval llast? ['a', 'b', 'c'] 
