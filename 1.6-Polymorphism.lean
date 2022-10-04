@@ -2,6 +2,8 @@
 
 -- 1. Write a function to find the last entry in a list. It should return an Option.
 
+---- Version 1 (method)
+
 def List.llast? {α : Type} (xs : List α) : Option α :=
   match xs with
   | [] => Option.none
@@ -9,8 +11,7 @@ def List.llast? {α : Type} (xs : List α) : Option α :=
 
 #eval ['a', 'b', 'c'].llast?
 
-
--- Alternative
+---- Version 2 (function)
 
 def llast? {α : Type} (xs : List α) : Option α :=
   match xs with
@@ -18,3 +19,26 @@ def llast? {α : Type} (xs : List α) : Option α :=
   | y :: aa => if aa.length == 0 then Option.some y else llast? aa
 
 #eval llast? ['a', 'b', 'c'] 
+
+
+-- 2. Write a function that finds the first entry in a list that satisfies a given predicate. Start the definition with def List.findFirst? {α : Type} (xs : List α) (predicate : α → Bool) : Option α :=
+
+---- Version 1 (method)
+
+def List.findFirst? {α : Type} (xs : List α) (predicate : α → Bool) : Option α :=
+  match xs with
+  | [] => Option.none
+  | y :: _ => if predicate y then Option.some y else Option.none
+
+#eval ['a', 'b', 'c'].findFirst? λ x => x == 'a' -- some 'a'
+#eval ['a', 'b', 'c'].findFirst? λ x => x == 'w' -- none
+
+---- Version 2 (function)
+
+def findFirst? {α : Type} (xs : List α) (predicate : α → Bool) : Option α :=
+  match xs with
+  | [] => Option.none
+  | y :: _ => if predicate y then Option.some y else Option.none
+
+#eval findFirst? ['a', 'b', 'c'] λ x => x == 'a' -- some 'a'
+#eval findFirst? ['a', 'b', 'c'] λ x => x == 'w' -- none
