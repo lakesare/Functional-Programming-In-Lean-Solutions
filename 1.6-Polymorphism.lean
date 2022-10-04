@@ -42,3 +42,12 @@ def findFirst? {α : Type} (xs : List α) (predicate : α → Bool) : Option α 
 
 #eval findFirst? ['a', 'b', 'c'] λ x => x == 'a' -- some 'a'
 #eval findFirst? ['a', 'b', 'c'] λ x => x == 'w' -- none
+
+
+
+-- 3. Write a function Prod.swap that swaps the two fields in a pair. Start the definition with def Prod.swap {α β : Type} (pair : α × β) : β × α :=
+
+def Prod.swap {α β : Type} (pair : α × β) : β × α :=
+  (pair.snd, pair.fst)
+
+#eval (3, 'a').swap //=> ('a', 3)
