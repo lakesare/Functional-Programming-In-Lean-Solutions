@@ -67,3 +67,35 @@ inductive OurPetName : Type where
 
 def ourAnimnals : List OurPetName :=
   [OurPetName.dog "Spot", OurPetName.cat "Toger", OurPetName.dog "Fifi", OurPetName.dog "Rex", OurPetName.cat "Floof"]
+
+
+
+-- 5. Write a function zip that combines two lists into a list of pairs. The resulting list should be as long as the shortest input list.
+
+-- Full solution
+def zip {α β : Type} (xs : List α) (ys : List β) : List (α × β) :=
+  match xs, ys with
+  | List.nil, List.nil => List.nil
+  | List.nil, List.cons n ns => List.nil
+  | List.cons m ms, List.nil => List.nil
+  | List.cons m ms, List.cons n ns => List.cons (m, n) (zip ms ns)
+
+-- Full solution, with "Automatic Implicit Arguments" syntax sugar (see https://leanprover.github.io/functional_programming_in_lean/getting-to-know/conveniences.html)
+def zip (xs : List α) (ys : List β) : List (α × β) :=
+  match xs, ys with
+  | List.nil, List.nil => List.nil
+  | List.nil, List.cons n ns => List.nil
+  | List.cons m ms, List.nil => List.nil
+  | List.cons m ms, List.cons n ns => List.cons (m, n) (zip ms ns)
+
+-- Full solution, with "Pattern-Matching Definitions" syntax sugar (see https://leanprover.github.io/functional_programming_in_lean/getting-to-know/conveniences.html)
+def zip : List α → List β → List (α × β)
+  | List.nil, List.nil => List.nil
+  | List.nil, List.cons n ns => List.nil
+  | List.cons m ms, List.nil => List.nil
+  | List.cons m ms, List.cons n ns => List.cons (m, n) (zip ms ns)
+
+#eval zip [1, 2, 3] ['a', 'b', 'c'] --=> [(1, 'a'), (2, 'b'), (3, 'c')]
+#eval zip [1, 2, 3] ['a', 'b'] --=> [(1, 'a'), (2, 'b')]
+
+
