@@ -51,3 +51,19 @@ def Prod.swap {α β : Type} (pair : α × β) : β × α :=
   (pair.snd, pair.fst)
 
 #eval (3, 'a').swap //=> ('a', 3)
+
+
+-- 4. Rewrite the PetName example to use a custom datatype and compare it to the version that uses Sum.
+
+-- Sum example from the book
+def PetName : Type := String ⊕ String
+def animals : List PetName :=
+  [Sum.inl "Spot", Sum.inr "Tiger", Sum.inl "Fifi", Sum.inl "Rex", Sum.inr "Floof"]
+
+-- Same example, but with a custom data type
+inductive OurPetName : Type where
+  | cat : String → OurPetName
+  | dog : String → OurPetName
+
+def ourAnimnals : List OurPetName :=
+  [OurPetName.dog "Spot", OurPetName.cat "Toger", OurPetName.dog "Fifi", OurPetName.dog "Rex", OurPetName.cat "Floof"]
