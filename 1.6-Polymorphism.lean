@@ -99,3 +99,16 @@ def zip : List α → List β → List (α × β)
 #eval zip [1, 2, 3] ['a', 'b'] --=> [(1, 'a'), (2, 'b')]
 
 
+
+-- 6. Write a polymorphic function take that returns the first n entries in a list, where n is a Nat. If the list contains fewer than n entries, then the resulting list should be the input list. #eval take 3 ["bolete", "oyster"] should yield ["bolete", "oyster"], and #eval take 1 ["bolete", "oyster"] should yield ["bolete"].
+
+def take {α : Type} (n : Nat) (xs : List α) : List α :=
+  match n, xs with
+  | Nat.zero, List.nil => List.nil
+  | Nat.succ a, List.nil => List.nil
+  | Nat.zero, List.cons m ms => List.nil
+  | Nat.succ a, List.cons m ms => List.cons m (take a ms)
+
+#eval take 3 ["bolete", "oyster"] 
+#eval take 1 ["bolete", "oyster"] 
+
