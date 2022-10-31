@@ -64,3 +64,65 @@ instance : OfNat PosType (n + 1) where
   ofNat := literalToPosType n
 
 #eval (5 : PosType)
+
+
+-- 2. Define a datatype that represents only even numbers. Define instances of Add, Mul, and ToString that allow it to be used conveniently.
+
+inductive EvenType where
+  | zero : EvenType
+  | plusTwo : EvenType → EvenType
+  | minusTwo : EvenType → EvenType
+
+def mTwo := EvenType.minusTwo EvenType.zero
+def pTwo := EvenType.plusTwo EvenType.zero
+def pFour := EvenType.plusTwo (EvenType.plusTwo EvenType.zero)
+
+def even_add (x : EvenType) (y : EvenType) :=
+  match x, y with
+  | a, EvenType.zero => a
+  | EvenType.zero, b => b
+  | EvenType.minusTwo a, EvenType.minusTwo b => EvenType.minusTwo (EvenType.minusTwo (even_add a b))
+  | EvenType.plusTwo a, EvenType.plusTwo b => EvenType.plusTwo (EvenType.plusTwo (even_add a b))
+  | EvenType.minusTwo a, EvenType.plusTwo b => even_add a b
+  | EvenType.plusTwo a, EvenType.minusTwo b => even_add a b
+
+#reduce even_add pFour mTwo -- EvenType.plusTwo EvenType.zero
+
+def even_minus (x : EvenType) (y : EvenType) :=
+  match x, y with
+  | a, EvenType.zero => a
+  | a, EvenType.minusTwo b => even_minus (EvenType.plusTwo a) b
+  | a, EvenType.plusTwo b => even_minus (EvenType.minusTwo a) b
+
+def even_mul (x : EvenType) (y: EvenType) :=
+  match x, y with
+  | _, EvenType.zero => EvenType.zero
+  | EvenType.zero, _ => EvenType.zero
+  -- (a - 2) * b = ab - 2b
+  | EvenType.minusTwo a, b => even_minus (even_minus (even_mul a b) b) b
+  | EvenType.plusTwo a, b => even_add (even_add (even_mul a b) b) b
+
+#reduce even_mul pFour mTwo -- -8 aka EvenType.minusTwo (EvenType.minusTwo (EvenType.minusTwo (EvenType.minusTwo EvenType.zero)))
+
+instance : Add EvenType where
+  add := even_add
+
+#reduce pFour + mTwo
+
+instance : Mul EvenType where
+  mul := even_mul
+
+#reduce pFour * mTwo
+
+def evenToString (x : EvenType) : String :=
+  match x with
+  | EvenType.zero => "+0"
+  | EvenType.minusTwo a => "-2" ++ evenToString a
+  | EvenType.plusTwo a => "+2"++ evenToString a
+
+#eval evenToString pFour
+
+instance : ToString EvenType where
+  toString := evenToString
+
+#print pFour
