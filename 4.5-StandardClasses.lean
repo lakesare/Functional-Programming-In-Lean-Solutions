@@ -28,6 +28,3 @@ instance : HAppend (List α) (NonEmptyList α) (NonEmptyList α) where
   }
 
 #eval ["Trapdoor Spider", "SPIDER"] ++ colors
-
--- 2. Implement a Functor instance for the binary tree datatype.
--- TODO
